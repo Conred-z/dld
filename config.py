@@ -12,8 +12,8 @@ MODEL_SAVE_PATH = 'logs/best_model.pth'
 
 # 超参数
 NUM_CLASSES = 5  # 花卉类别数
-BATCH_SIZE = 32
-NUM_EPOCHS = 25
+BATCH_SIZE = 16
+NUM_EPOCHS = 2
 LEARNING_RATE = 0.001
 
 # 检查设备
