@@ -7,6 +7,7 @@ from utils.data_loader import get_data_loaders
 from config import *
 
 
+############ V3.0 #########################
 def train_model(model, criterion, optimizer, dataloaders, num_epochs):
     best_acc = 0.0  # 用于记录最佳验证集准确率
 
