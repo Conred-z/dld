@@ -32,7 +32,7 @@ if __name__ == '__main__':
     plot_confusion_matrix(labels, preds, dataloaders['test'].dataset.classes)
 
     # 测试图片预测
-    test_image_path = 'test_images/sunflower.jpg'  # 替换为测试图片路径
+    test_image_path = 'data/test/0/image_06736.jpg'  # 替换为测试图片路径
     transform = transforms.Compose([
         transforms.Resize(256),
         transforms.CenterCrop(224),
