@@ -1,6 +1,6 @@
 # 主程序入口
 import torch
-import torch.nn as nn   # 包含神经网络模块和损失函数
+import torch.nn as nn   # 包含神经网络模块和损失函数，定义网络结构、模块
 import torch.optim as optim # 包含优化器，如 Adam、SGD 等
 from utils.train import train_model # 自定义工具模块，包含训练、评估、预测和数据加载的函数
 from utils.evaluate import evaluate_model, plot_confusion_matrix
