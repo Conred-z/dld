@@ -1,8 +1,8 @@
 # 主程序入口
 import torch
-import torch.nn as nn
-import torch.optim as optim
-from utils.train import train_model
+import torch.nn as nn   # 包含神经网络模块和损失函数
+import torch.optim as optim # 包含优化器，如 Adam、SGD 等
+from utils.train import train_model # 自定义工具模块，包含训练、评估、预测和数据加载的函数
 from utils.evaluate import evaluate_model, plot_confusion_matrix
 from utils.predict import predict_image
 from utils.data_loader import get_data_loaders
@@ -16,10 +16,16 @@ import numpy as np
 
 
 ######### V2.0 #########################
+# 定义一个函数 predict_images_in_folder，用于预测指定文件夹中所有图像的类别。
 def predict_images_in_folder(model, transform, folder_path, class_names):
+    # 初始化两个空列表 predictions 和 true_labels，用于存储预测结果和真实标签。
     predictions = []
     true_labels = []
+
+    # 使用字典推导式创建一个字典 label_map，将类别名称映射到对应的索引。
+    # enumerate(class_names) 生成类别名称及其索引，class_name: i 将类别名称作为键，索引作为值。
     label_map = {class_name: i for i, class_name in enumerate(class_names)}
+
     for class_folder in os.listdir(folder_path):
         class_folder_path = os.path.join(folder_path, class_folder)
         if not os.path.isdir(class_folder_path):
@@ -52,16 +58,17 @@ if __name__ == '__main__':
     # 初始化模型、损失函数和优化器
     model = get_resnet50_model(NUM_CLASSES)
     model = model.to(DEVICE)
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss()   # 定义损失函数为 nn.CrossEntropyLoss()，这是分类任务中常用的交叉熵损失函数。
 
-    # 加载最佳模型权重
-    model.load_state_dict(torch.load(MODEL_SAVE_PATH, map_location=DEVICE))
+    # 调用 model.load_state_dict 将加载的权重应用到模型上。
+    model.load_state_dict(torch.load(MODEL_SAVE_PATH, map_location=DEVICE)) # 参数一：加载的模型权重，参数二：指定加载到哪个设备上（如 CPU 或 GPU）。
+    # 将模型设置为评估模式，这会关闭某些在训练阶段启用的层（如 Dropout、BatchNorm 等）的特定行为，确保模型在推理时表现一致。
     model.eval()
 
     # 定义图像预处理
     transform = transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
+        transforms.Resize(256),     # 将像素调整为256*256像素
+        transforms.CenterCrop(224), # 使用 transforms.CenterCrop 从调整大小后的图像中裁剪出一个 224x224 像素的中心区域，与ResNet50的输入要求一致
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ])
@@ -82,8 +89,9 @@ if __name__ == '__main__':
     plt.title('Confusion Matrix')
     plt.show()
 
-    # 可视化预测结果的分布
+    # 使用 np.bincount 统计预测结果 predictions 和真实标签 true_labels 中每个类别的出现次数。
     pred_counts = np.bincount(predictions, minlength=len(class_names))
+    # 参数 minlength=len(class_names) 确保统计结果的长度与类别数量一致。
     true_counts = np.bincount(true_labels, minlength=len(class_names))
 
     plt.figure(figsize=(12, 6))
